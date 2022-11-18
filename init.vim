@@ -22,6 +22,7 @@ Plug 'google/vim-codefmt'
 " Also add Glaive, which is used to configure codefmt's maktaba flags. See
 " `:help :Glaive` for usage.
 Plug 'google/vim-glaive'
+Plug 'numToStr/Comment.nvim'
 
 call plug#end()
 
@@ -37,8 +38,8 @@ set background=dark
 "colorscheme fleetish
 "let ayucolor="dark"   " for dark version of theme
 "colorscheme ayu
-colorscheme darcula
-"colorscheme darcula-solid
+"colorscheme darcula
+colorscheme darcula-solid
 "CHADTree Configs
 nnoremap <leader>v <cmd>CHADopen<cr>
 nnoremap <leader>w :bd<cr>
@@ -101,3 +102,12 @@ EOF
 " google/codefmt
 call glaive#Install()
 nnoremap <leader>cf <cmd>FormatCode<cr>
+
+" Indent Line Configs
+let g:identLine_conceallevel=0
+
+
+" Comment Plugin Configs
+lua << EOF
+require('Comment').setup() 
+EOF
