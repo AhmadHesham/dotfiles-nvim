@@ -111,3 +111,8 @@ let g:identLine_conceallevel=0
 lua << EOF
 require('Comment').setup() 
 EOF
+
+" Custom Keyboard shortcuts
+" Open a new Tab
+nnoremap <silent> <leader>sc <cmd> vs <cr>
+nnoremap <silent> <leader>nt <cmd> vnew <cr>
