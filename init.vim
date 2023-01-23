@@ -17,29 +17,40 @@ Plug 'briones-gabriel/darcula-solid.nvim'
 Plug 'rktjmp/lush.nvim'
 " Add maktaba and codefmt to the runtimepath.
 " (The latter must be installed before it can be used.)
-Plug 'google/vim-maktaba'
-Plug 'google/vim-codefmt'
+" Plug 'google/vim-maktaba'
+" Plug 'google/vim-codefmt'
 " Also add Glaive, which is used to configure codefmt's maktaba flags. See
 " `:help :Glaive` for usage.
-Plug 'google/vim-glaive'
+" Plug 'google/vim-glaive'
 Plug 'numToStr/Comment.nvim'
+Plug 'APZelos/blamer.nvim'
+Plug 'chrisbra/csv.vim'
+Plug 'vim-autoformat/vim-autoformat'
 
 call plug#end()
 
 "------------ Configs ------------
 let mapleader = ","
 set encoding=UTF-8
+set ts=4 sw=4
 
 set number
 syntax on
+
+" Making the background transparent
+augroup user_colors
+	autocmd!
+	autocmd ColorScheme * highlight Normal ctermbg=NONE guibg=NONE
+augroup END
 
 set termguicolors
 set background=dark
 "colorscheme fleetish
 "let ayucolor="dark"   " for dark version of theme
-"colorscheme ayu
+" colorscheme ayu
 "colorscheme darcula
 colorscheme darcula-solid
+
 "CHADTree Configs
 nnoremap <leader>v <cmd>CHADopen<cr>
 nnoremap <leader>w :bd<cr>
@@ -48,27 +59,27 @@ nnoremap <leader>w :bd<cr>
 nnoremap <leader>ff <cmd>Telescope find_files<cr>
 
 "Coc Configs
-nnoremap <leader>b :call CocActionAsync('jumpDefinition')<cr>
-nnoremap <leader>r <Plug>(coc-references)
+nnoremap <silent> <leader>b :call CocActionAsync('jumpDefinition')<cr>
+nnoremap <silent> <leader>r <Plug>(coc-references)
 inoremap <silent><expr> <TAB>
-      \ coc#pum#visible() ? coc#pum#next(1) :
-      \ CheckBackspace() ? "\<Tab>" :
-      \ coc#refresh()
+			\ coc#pum#visible() ? coc#pum#next(1) :
+			\ CheckBackspace() ? "\<Tab>" :
+			\ coc#refresh()
 
 inoremap <silent><expr> <CR> coc#pum#visible() ? coc#pum#confirm()
-                              \: "\<C-g>u\<CR>\<c-r>=coc#on_enter()\<CR>"
+			\: "\<C-g>u\<CR>\<c-r>=coc#on_enter()\<CR>"
 function! CheckBackspace() abort
-  let col = col('.') - 1
-  return !col || getline('.')[col - 1]  =~# '\s'
+	let col = col('.') - 1
+	return !col || getline('.')[col - 1]  =~# '\s'
 endfunction
 
 nnoremap <silent> K :call ShowDocumentation()<CR>
 function! ShowDocumentation()
-  if CocAction('hasProvider', 'hover')
-    call CocActionAsync('doHover')
-  else
-    call feedkeys('K', 'in')
-  endif
+	if CocAction('hasProvider', 'hover')
+		call CocActionAsync('doHover')
+	else
+		call feedkeys('K', 'in')
+	endif
 endfunction
 
 " Rename symbol
@@ -100,8 +111,8 @@ require('lualine').setup()
 EOF
 
 " google/codefmt
-call glaive#Install()
-nnoremap <leader>cf <cmd>FormatCode<cr>
+" call glaive#Install()
+" nnoremap <leader>cf <cmd>FormatCode<cr>
 
 " Indent Line Configs
 let g:identLine_conceallevel=0
@@ -109,10 +120,20 @@ let g:identLine_conceallevel=0
 
 " Comment Plugin Configs
 lua << EOF
-require('Comment').setup() 
+require('Comment').setup()
 EOF
 
 " Custom Keyboard shortcuts
 " Open a new Tab
 nnoremap <silent> <leader>sc <cmd> vs <cr>
 nnoremap <silent> <leader>nt <cmd> vnew <cr>
+
+" Git blamer configs
+let g:blamer_enabled = 1
+
+" Terminal Configs
+:tnoremap <Esc> <C-\><C-n>
+
+" Vim autoformat
+let g:python3_host_prog="/usr/local/bin/python3"
+noremap <silent> <leader>cf :Autoformat <CR>
