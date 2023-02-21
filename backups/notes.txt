@@ -1,0 +1,1 @@
+The parser file should be in this path: /usr/local/Cellar/neovim/0.8.2/lib/nvim/

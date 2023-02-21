@@ -28,6 +28,14 @@ Plug 'chrisbra/csv.vim'
 Plug 'vim-autoformat/vim-autoformat'
 Plug 'lervag/vimtex'
 Plug 'xuhdev/vim-latex-live-preview', { 'for': 'tex' }
+Plug 'tzachar/local-highlight.nvim'
+Plug 'rcarriga/nvim-notify'
+Plug 'MunifTanjim/nui.nvim'
+Plug 'iamcco/markdown-preview.nvim', { 'do': 'cd app && yarn install' }
+Plug 'tomasiser/vim-code-dark'
+
+" Might break stuff
+Plug 'folke/noice.nvim'
 
 call plug#end()
 
@@ -35,6 +43,7 @@ call plug#end()
 let mapleader = ","
 set encoding=UTF-8
 set ts=4 sw=4
+set mouse=
 
 set number
 syntax on
@@ -45,13 +54,16 @@ augroup user_colors
 	autocmd ColorScheme * highlight Normal ctermbg=NONE guibg=NONE
 augroup END
 
-set termguicolors
 set background=dark
-"colorscheme fleetish
-"let ayucolor="dark"   " for dark version of theme
-" colorscheme ayu
-"colorscheme darcula
-colorscheme darcula-solid
+set termguicolors
+
+" Vscode theme configs
+" If you don't like many colors and prefer the conservative style of the standard Visual Studio
+" let g:codedark_conservative=1
+" Make the background transparent
+let g:codedark_transparent=1
+colorscheme codedark
+
 
 "CHADTree Configs
 nnoremap <leader>v <cmd>CHADopen<cr>
@@ -158,3 +170,44 @@ let g:vimtex_compiler_method = 'latexmk'
 
 " Latex Live Preview Configs
 let g:livepreview_previewer = 'zathura'
+
+" Local-Highlight Configs
+lua << EOF
+require('local-highlight').setup({
+file_types = {'python', 'cpp', 'vim'}
+})
+EOF
+
+" Notify Configs
+lua << EOF
+require('notify').setup({
+background_colour = '#000000'
+})
+EOF
+
+
+" Noice Configs
+lua << EOF
+require("noice").setup({
+lsp = {
+-- override markdown rendering so that **cmp** and other plugins use **Treesitter**
+override = {
+["vim.lsp.util.convert_input_to_markdown_lines"] = true,
+["vim.lsp.util.stylize_markdown"] = true,
+["cmp.entry.get_documentation"] = true,
+},
+},
+-- you can enable a preset for easier configuration
+presets = {
+bottom_search = true, -- use a classic bottom cmdline for search
+command_palette = true, -- position the cmdline and popupmenu together
+long_message_to_split = true, -- long messages will be sent to a split
+inc_rename = false, -- enables an input dialog for inc-rename.nvim
+lsp_doc_border = false, -- add a border to hover docs and signature help
+},
+})
+EOF
+
+" Setting indentLine conceal level
+let g:indentLine_setConceal = 0
+
