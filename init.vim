@@ -15,13 +15,6 @@ Plug 'nvim-lualine/lualine.nvim'
 Plug 'doums/darcula'
 Plug 'briones-gabriel/darcula-solid.nvim'
 Plug 'rktjmp/lush.nvim'
-" Add maktaba and codefmt to the runtimepath.
-" (The latter must be installed before it can be used.)
-" Plug 'google/vim-maktaba'
-" Plug 'google/vim-codefmt'
-" Also add Glaive, which is used to configure codefmt's maktaba flags. See
-" `:help :Glaive` for usage.
-" Plug 'google/vim-glaive'
 Plug 'numToStr/Comment.nvim'
 Plug 'APZelos/blamer.nvim'
 Plug 'chrisbra/csv.vim'
@@ -33,6 +26,8 @@ Plug 'rcarriga/nvim-notify'
 Plug 'MunifTanjim/nui.nvim'
 Plug 'iamcco/markdown-preview.nvim', { 'do': 'cd app && yarn install' }
 Plug 'tomasiser/vim-code-dark'
+Plug 'akinsho/toggleterm.nvim'
+Plug 'lukas-reineke/indent-blankline.nvim'
 
 " Might break stuff
 Plug 'folke/noice.nvim'
@@ -124,10 +119,6 @@ lua << EOF
 require('lualine').setup()
 EOF
 
-" google/codefmt
-" call glaive#Install()
-" nnoremap <leader>cf <cmd>FormatCode<cr>
-
 " Indent Line Configs
 let g:identLine_conceallevel=0
 
@@ -181,7 +172,8 @@ EOF
 " Notify Configs
 lua << EOF
 require('notify').setup({
-background_colour = '#000000'
+background_colour = '#000000',
+stages = 'static'
 })
 EOF
 
@@ -190,24 +182,38 @@ EOF
 lua << EOF
 require("noice").setup({
 lsp = {
--- override markdown rendering so that **cmp** and other plugins use **Treesitter**
-override = {
-["vim.lsp.util.convert_input_to_markdown_lines"] = true,
-["vim.lsp.util.stylize_markdown"] = true,
-["cmp.entry.get_documentation"] = true,
-},
-},
--- you can enable a preset for easier configuration
-presets = {
-bottom_search = true, -- use a classic bottom cmdline for search
-command_palette = true, -- position the cmdline and popupmenu together
-long_message_to_split = true, -- long messages will be sent to a split
-inc_rename = false, -- enables an input dialog for inc-rename.nvim
-lsp_doc_border = false, -- add a border to hover docs and signature help
-},
+	-- override markdown rendering so that **cmp** and other plugins use **Treesitter**
+	override = {
+		["vim.lsp.util.convert_input_to_markdown_lines"] = true,
+		["vim.lsp.util.stylize_markdown"] = true,
+		["cmp.entry.get_documentation"] = true,
+		},
+	},
+	-- you can enable a preset for easier configuration
+	presets = {
+		bottom_search = true, -- use a classic bottom cmdline for search
+		command_palette = true, -- position the cmdline and popupmenu together
+		long_message_to_split = true, -- long messages will be sent to a split
+		inc_rename = false, -- enables an input dialog for inc-rename.nvim
+		lsp_doc_border = false, -- add a border to hover docs and signature help
+		},
 })
 EOF
 
 " Setting indentLine conceal level
 let g:indentLine_setConceal = 0
 
+" toggle term configs
+lua << EOF
+require("toggleterm").setup {
+	open_mapping = [[<c-`>]],
+	insert_mappings = true,
+	start_in_insert = false,
+	size = 15
+}
+EOF
+
+" indent-blankline configs
+lua << EOF
+require("indent_blankline").setup {}
+EOF
