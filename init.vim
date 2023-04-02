@@ -22,7 +22,7 @@ Plug 'vim-autoformat/vim-autoformat'
 Plug 'lervag/vimtex'
 Plug 'xuhdev/vim-latex-live-preview', { 'for': 'tex' }
 Plug 'tzachar/local-highlight.nvim'
-Plug 'rcarriga/nvim-notify'
+" Plug 'rcarriga/nvim-notify'
 Plug 'MunifTanjim/nui.nvim'
 Plug 'iamcco/markdown-preview.nvim', { 'do': 'cd app && yarn install' }
 Plug 'tomasiser/vim-code-dark'
@@ -170,18 +170,19 @@ file_types = {'python', 'cpp', 'vim'}
 EOF
 
 " Notify Configs
-lua << EOF
-require('notify').setup({
-background_colour = '#000000',
-stages = 'static'
-})
-EOF
+" lua << EOF
+" require('notify').setup({
+" background_colour = '#000000',
+" stages = 'static'
+" })
+" EOF
 
 
 " Noice Configs
 lua << EOF
 require("noice").setup({
 lsp = {
+	messages = { enabled = false },
 	-- override markdown rendering so that **cmp** and other plugins use **Treesitter**
 	override = {
 		["vim.lsp.util.convert_input_to_markdown_lines"] = true,
