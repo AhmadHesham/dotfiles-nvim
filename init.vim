@@ -16,7 +16,6 @@ Plug 'doums/darcula'
 Plug 'briones-gabriel/darcula-solid.nvim'
 Plug 'rktjmp/lush.nvim'
 Plug 'numToStr/Comment.nvim'
-Plug 'APZelos/blamer.nvim'
 Plug 'chrisbra/csv.vim'
 Plug 'vim-autoformat/vim-autoformat'
 Plug 'lervag/vimtex'
@@ -28,7 +27,7 @@ Plug 'iamcco/markdown-preview.nvim', { 'do': 'cd app && yarn install' }
 Plug 'tomasiser/vim-code-dark'
 Plug 'akinsho/toggleterm.nvim'
 Plug 'lukas-reineke/indent-blankline.nvim'
-
+Plug 'lewis6991/gitsigns.nvim'
 " Might break stuff
 Plug 'folke/noice.nvim'
 
@@ -38,7 +37,7 @@ call plug#end()
 let mapleader = ","
 set encoding=UTF-8
 set ts=4 sw=4
-set mouse=
+set mouse=a
 
 set number
 syntax on
@@ -133,9 +132,6 @@ EOF
 nnoremap <silent> <leader>sc <cmd> vs <cr>
 nnoremap <silent> <leader>nt <cmd> vnew <cr>
 
-" Git blamer configs
-let g:blamer_enabled = 1
-
 " Terminal Configs
 :tnoremap <Esc> <C-\><C-n>
 
@@ -217,4 +213,14 @@ EOF
 " indent-blankline configs
 lua << EOF
 require("indent_blankline").setup {}
+EOF
+
+" Git signs configs
+lua << EOF
+require('gitsigns').setup({
+current_line_blame = true,
+current_line_blame_opts = {
+	delay = 500
+}
+})
 EOF
