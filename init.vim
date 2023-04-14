@@ -1,6 +1,5 @@
 call plug#begin()
 Plug 'ayu-theme/ayu-vim'
-Plug 'Yggdroot/indentLine'
 Plug 'ms-jpq/chadtree', {'branch': 'chad', 'do': 'python3 -m chadtree deps'}
 Plug 'neoclide/coc.nvim', {'branch': 'release'}
 Plug 'nvim-lua/plenary.nvim'
@@ -30,6 +29,8 @@ Plug 'lukas-reineke/indent-blankline.nvim'
 Plug 'lewis6991/gitsigns.nvim'
 " Might break stuff
 Plug 'folke/noice.nvim'
+Plug 'goolord/alpha-nvim'
+Plug 'simrat39/symbols-outline.nvim'
 
 call plug#end()
 
@@ -65,6 +66,7 @@ nnoremap <leader>w :bd<cr>
 
 "Telescope Configs
 nnoremap <leader>ff <cmd>Telescope find_files<cr>
+nnoremap <leader>fw <cmd>Telescope live_grep<cr>
 
 "Coc Configs
 nnoremap <silent> <leader>b :call CocActionAsync('jumpDefinition')<cr>
@@ -184,21 +186,18 @@ lsp = {
 		["vim.lsp.util.convert_input_to_markdown_lines"] = true,
 		["vim.lsp.util.stylize_markdown"] = true,
 		["cmp.entry.get_documentation"] = true,
-		},
 	},
-	-- you can enable a preset for easier configuration
-	presets = {
-		bottom_search = true, -- use a classic bottom cmdline for search
-		command_palette = true, -- position the cmdline and popupmenu together
-		long_message_to_split = true, -- long messages will be sent to a split
-		inc_rename = false, -- enables an input dialog for inc-rename.nvim
-		lsp_doc_border = false, -- add a border to hover docs and signature help
-		},
+},
+-- you can enable a preset for easier configuration
+presets = {
+	bottom_search = true, -- use a classic bottom cmdline for search
+	command_palette = true, -- position the cmdline and popupmenu together
+	long_message_to_split = true, -- long messages will be sent to a split
+	inc_rename = false, -- enables an input dialog for inc-rename.nvim
+	lsp_doc_border = false, -- add a border to hover docs and signature help
+},
 })
 EOF
-
-" Setting indentLine conceal level
-let g:indentLine_setConceal = 0
 
 " toggle term configs
 lua << EOF
@@ -223,4 +222,37 @@ current_line_blame_opts = {
 	delay = 500
 }
 })
+EOF
+
+" alpha-vim configs
+lua << EOF
+local logo = {
+	"    |\\__/,|   (`\\ ",
+	"  _.|o o  |_   ) )",
+	"-(((---(((--------"
+	}
+
+local function pick_color()
+	local colors = {"String", "Identifier", "Keyword", "Number"}
+	return colors[math.random(#colors)]
+end
+
+local alpha = require("alpha")
+local dashboard = require("alpha.themes.dashboard")
+
+dashboard.section.header.opts.hl = pick_color()
+dashboard.section.header.val = logo
+dashboard.section.buttons.val = {
+	dashboard.button("<Leader>ff", "  Find File"),
+	dashboard.button("<Leader>fw", "  Find Word"),
+}
+
+alpha.setup(dashboard.opts)
+
+vim.cmd([[ autocmd FileType alpha setlocal nofoldenable ]])
+EOF
+
+" Vim outline configs
+lua << EOF
+require("symbols-outline").setup()
 EOF
