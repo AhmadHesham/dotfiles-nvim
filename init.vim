@@ -1,40 +1,42 @@
 call plug#begin()
-Plug 'ayu-theme/ayu-vim'
-Plug 'ms-jpq/chadtree', {'branch': 'chad', 'do': 'python3 -m chadtree deps'}
+
 Plug 'neoclide/coc.nvim', {'branch': 'release'}
-Plug 'nvim-lua/plenary.nvim'
-Plug 'nvim-telescope/telescope.nvim', { 'tag': '0.1.0' }
-Plug 'krfl/fleetish-vim'
-Plug 'ellisonleao/glow.nvim'
+Plug 'ms-jpq/chadtree', {'branch': 'chad', 'do': 'python3 -m chadtree deps'}
 Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}
-Plug 'nvim-tree/nvim-web-devicons' " Recommended (for coloured icons)
+Plug 'feline-nvim/feline.nvim'
+" Barbar
+Plug 'lewis6991/gitsigns.nvim' " OPTIONAL: for git status
+Plug 'nvim-tree/nvim-web-devicons' " OPTIONAL: for file icons
 Plug 'romgrk/barbar.nvim'
-Plug 'jiangmiao/auto-pairs'
-Plug 'nvim-lualine/lualine.nvim'
-Plug 'doums/darcula'
-Plug 'briones-gabriel/darcula-solid.nvim'
-Plug 'rktjmp/lush.nvim'
-Plug 'numToStr/Comment.nvim'
-Plug 'chrisbra/csv.vim'
-Plug 'vim-autoformat/vim-autoformat'
-Plug 'lervag/vimtex'
-Plug 'xuhdev/vim-latex-live-preview', { 'for': 'tex' }
-Plug 'tzachar/local-highlight.nvim'
-" Plug 'rcarriga/nvim-notify'
-Plug 'MunifTanjim/nui.nvim'
-Plug 'iamcco/markdown-preview.nvim', { 'do': 'cd app && yarn install' }
-Plug 'tomasiser/vim-code-dark'
-Plug 'akinsho/toggleterm.nvim'
-Plug 'lukas-reineke/indent-blankline.nvim'
-Plug 'lewis6991/gitsigns.nvim'
-" Might break stuff
+
+" Telescope
+Plug 'nvim-lua/plenary.nvim'
+Plug 'nvim-telescope/telescope.nvim', { 'tag': '0.1.5' }
+
 Plug 'folke/noice.nvim'
+Plug 'MunifTanjim/nui.nvim'
+Plug 'tzachar/local-highlight.nvim'
+
+Plug 'vim-autoformat/vim-autoformat'
+
+" Theme
+Plug 'tomasiser/vim-code-dark'
+
+" Icons
+Plug 'nvim-tree/nvim-web-devicons' " Recommended (for coloured icons)
+
+" Dashboard
 Plug 'goolord/alpha-nvim'
-Plug 'simrat39/symbols-outline.nvim'
+
+" Comments
+Plug 'numToStr/Comment.nvim'
+
+" Auto bracket close
+Plug 'windwp/nvim-autopairs'
 
 call plug#end()
 
-"------------ Configs ------------
+" ----- Configs -----
 let mapleader = ","
 set encoding=UTF-8
 set ts=4 sw=4
@@ -42,6 +44,9 @@ set mouse=a
 
 set number
 syntax on
+
+" Shortcuts
+nnoremap <silent> <leader>sw <C-w>w
 
 " Making the background transparent
 augroup user_colors
@@ -59,10 +64,9 @@ set termguicolors
 let g:codedark_transparent=1
 colorscheme codedark
 
-
 "CHADTree Configs
 nnoremap <leader>v <cmd>CHADopen<cr>
-nnoremap <leader>w :bd<cr>
+nnoremap <silent> <leader>w :bd<cr>
 
 "Telescope Configs
 nnoremap <leader>ff <cmd>Telescope find_files<cr>
@@ -114,67 +118,10 @@ require'nvim-treesitter.configs'.setup {
 }
 EOF
 
-
-"Lualine Configs
+" Feline
 lua << EOF
-require('lualine').setup()
+require('feline').setup()
 EOF
-
-" Indent Line Configs
-let g:identLine_conceallevel=0
-
-
-" Comment Plugin Configs
-lua << EOF
-require('Comment').setup()
-EOF
-
-" Custom Keyboard shortcuts
-" Open a new Tab
-nnoremap <silent> <leader>sc <cmd> vs <cr>
-nnoremap <silent> <leader>nt <cmd> vnew <cr>
-
-" Terminal Configs
-:tnoremap <Esc> <C-\><C-n>
-
-" Vim autoformat
-let g:python3_host_prog="/usr/local/bin/python3"
-noremap <silent> <leader>cf :Autoformat <CR>
-
-" VimTex Configs
-" This is necessary for VimTeX to load properly. The "indent" is optional.
-" Note that most plugin managers will do this automatically.
-filetype plugin on
-
-" Viewer options: One may configure the viewer either by specifying a built-in
-" viewer method:
-let g:vimtex_view_method = 'zathura'
-
-" VimTeX uses latexmk as the default compiler backend. If you use it, which is
-" strongly recommended, you probably don't need to configure anything. If you
-" want another compiler backend, you can change it as follows. The list of
-" supported backends and further explanation is provided in the documentation,
-" see ":help vimtex-compiler".
-let g:vimtex_compiler_method = 'latexmk'
-
-" Latex Live Preview Configs
-let g:livepreview_previewer = 'zathura'
-
-" Local-Highlight Configs
-lua << EOF
-require('local-highlight').setup({
-file_types = {'python', 'cpp', 'vim'}
-})
-EOF
-
-" Notify Configs
-" lua << EOF
-" require('notify').setup({
-" background_colour = '#000000',
-" stages = 'static'
-" })
-" EOF
-
 
 " Noice Configs
 lua << EOF
@@ -186,32 +133,34 @@ lsp = {
 		["vim.lsp.util.convert_input_to_markdown_lines"] = true,
 		["vim.lsp.util.stylize_markdown"] = true,
 		["cmp.entry.get_documentation"] = true,
+		},
 	},
-},
--- you can enable a preset for easier configuration
-presets = {
-	bottom_search = true, -- use a classic bottom cmdline for search
-	command_palette = true, -- position the cmdline and popupmenu together
-	long_message_to_split = true, -- long messages will be sent to a split
-	inc_rename = false, -- enables an input dialog for inc-rename.nvim
-	lsp_doc_border = false, -- add a border to hover docs and signature help
-},
+	-- you can enable a preset for easier configuration
+	presets = {
+		bottom_search = true, -- use a classic bottom cmdline for search
+		command_palette = true, -- position the cmdline and popupmenu together
+		long_message_to_split = true, -- long messages will be sent to a split
+		inc_rename = false, -- enables an input dialog for inc-rename.nvim
+		lsp_doc_border = false, -- add a border to hover docs and signature help
+		},
 })
 EOF
 
-" toggle term configs
+" Comment Plugin Configs
 lua << EOF
-require("toggleterm").setup {
-	open_mapping = [[<c-`>]],
-	insert_mappings = true,
-	start_in_insert = false,
-	size = 15
-}
+require('Comment').setup()
 EOF
 
-" indent-blankline configs
+" Vim autoformat
+let g:python3_host_prog="/usr/local/bin/python3"
+" noremap <silent> <leader>cf :Autoformat <CR>
+" au BufWrite * :Autoformat
+
+" Local-Highlight Configs
 lua << EOF
-require("indent_blankline").setup {}
+require('local-highlight').setup({
+file_types = {'python', 'cpp', 'vim'}
+})
 EOF
 
 " Git signs configs
@@ -224,35 +173,34 @@ current_line_blame_opts = {
 })
 EOF
 
-" alpha-vim configs
 lua << EOF
-local logo = {
-	"    |\\__/,|   (`\\ ",
-	"  _.|o o  |_   ) )",
-	"-(((---(((--------"
-	}
+ local alpha = require'alpha'
+ local dashboard = require'alpha.themes.dashboard'
+ dashboard.section.header.val = {
+	 [[                               __                ]],
+	 [[  ___     ___    ___   __  __ /\_\    ___ ___    ]],
+	 [[ / _ `\  / __`\ / __`\/\ \/\ \\/\ \  / __` __`\  ]],
+	 [[/\ \/\ \/\  __//\ \_\ \ \ \_/ |\ \ \/\ \/\ \/\ \ ]],
+	 [[\ \_\ \_\ \____\ \____/\ \___/  \ \_\ \_\ \_\ \_\]],
+	 [[ \/_/\/_/\/____/\/___/  \/__/    \/_/\/_/\/_/\/_/]],
+ }
+ dashboard.section.buttons.val = {
+	dashboard.button("ff", "  Find File", ",ff"),
+	dashboard.button("fw", "  Find Word", ",fw"),
+ }
+ local handle = io.popen('fortune')
+ local fortune = handle:read("*a")
+ handle:close()
+ dashboard.section.footer.val = fortune
 
-local function pick_color()
-	local colors = {"String", "Identifier", "Keyword", "Number"}
-	return colors[math.random(#colors)]
-end
+ dashboard.config.opts.noautocmd = true
 
-local alpha = require("alpha")
-local dashboard = require("alpha.themes.dashboard")
+ vim.cmd[[autocmd User AlphaReady echo 'ready']]
 
-dashboard.section.header.opts.hl = pick_color()
-dashboard.section.header.val = logo
-dashboard.section.buttons.val = {
-	dashboard.button("<Leader>ff", "  Find File"),
-	dashboard.button("<Leader>fw", "  Find Word"),
-}
-
-alpha.setup(dashboard.opts)
-
-vim.cmd([[ autocmd FileType alpha setlocal nofoldenable ]])
+ alpha.setup(dashboard.config)
 EOF
 
-" Vim outline configs
+" auto-pairs configs
 lua << EOF
-require("symbols-outline").setup()
+require("nvim-autopairs").setup({})
 EOF
