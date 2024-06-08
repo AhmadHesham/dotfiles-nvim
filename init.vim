@@ -5,13 +5,12 @@ Plug 'ms-jpq/chadtree', {'branch': 'chad', 'do': 'python3 -m chadtree deps'}
 Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}
 Plug 'feline-nvim/feline.nvim'
 " Barbar
-Plug 'lewis6991/gitsigns.nvim' " OPTIONAL: for git status
 Plug 'nvim-tree/nvim-web-devicons' " OPTIONAL: for file icons
 Plug 'romgrk/barbar.nvim'
 
 " Telescope
 Plug 'nvim-lua/plenary.nvim'
-Plug 'nvim-telescope/telescope.nvim', { 'tag': '0.1.5' }
+Plug 'nvim-telescope/telescope.nvim', { 'tag': '0.1.6' }
 
 Plug 'folke/noice.nvim'
 Plug 'MunifTanjim/nui.nvim'
@@ -31,8 +30,16 @@ Plug 'goolord/alpha-nvim'
 " Comments
 Plug 'numToStr/Comment.nvim'
 
+" Git
+Plug 'lewis6991/gitsigns.nvim' " OPTIONAL: for git status
+Plug 'sindrets/diffview.nvim'
+
+" Navigation
+Plug 'ggandor/leap.nvim'
+
 " Auto bracket close
-Plug 'windwp/nvim-autopairs'
+" Plug 'windwp/nvim-autopairs'
+
 
 call plug#end()
 
@@ -75,13 +82,17 @@ nnoremap <leader>fw <cmd>Telescope live_grep<cr>
 "Coc Configs
 nnoremap <silent> <leader>b :call CocActionAsync('jumpDefinition')<cr>
 nnoremap <silent> <leader>r <Plug>(coc-references)
+xmap <leader>a  <Plug>(coc-codeaction-selected)
+nmap <leader>a  <Plug>(coc-codeaction-selected)
+nmap <leader>ac   <Plug>(coc-codeaction-selected)w
+" Apply the most preferred quickfix action to fix diagnostic on the current line
+" nmap <leader>qf  <Plug>(coc-fix-current)
 inoremap <silent><expr> <TAB>
 			\ coc#pum#visible() ? coc#pum#next(1) :
 			\ CheckBackspace() ? "\<Tab>" :
 			\ coc#refresh()
 
-inoremap <silent><expr> <CR> coc#pum#visible() ? coc#pum#confirm()
-			\: "\<C-g>u\<CR>\<c-r>=coc#on_enter()\<CR>"
+inoremap <silent><expr> <CR> coc#pum#visible() ? coc#pum#confirm() : "\<CR>"
 function! CheckBackspace() abort
 	let col = col('.') - 1
 	return !col || getline('.')[col - 1]  =~# '\s'
@@ -133,16 +144,16 @@ lsp = {
 		["vim.lsp.util.convert_input_to_markdown_lines"] = true,
 		["vim.lsp.util.stylize_markdown"] = true,
 		["cmp.entry.get_documentation"] = true,
-		},
 	},
-	-- you can enable a preset for easier configuration
-	presets = {
-		bottom_search = true, -- use a classic bottom cmdline for search
-		command_palette = true, -- position the cmdline and popupmenu together
-		long_message_to_split = true, -- long messages will be sent to a split
-		inc_rename = false, -- enables an input dialog for inc-rename.nvim
-		lsp_doc_border = false, -- add a border to hover docs and signature help
-		},
+},
+-- you can enable a preset for easier configuration
+presets = {
+	bottom_search = true, -- use a classic bottom cmdline for search
+	command_palette = true, -- position the cmdline and popupmenu together
+	long_message_to_split = true, -- long messages will be sent to a split
+	inc_rename = false, -- enables an input dialog for inc-rename.nvim
+	lsp_doc_border = false, -- add a border to hover docs and signature help
+},
 })
 EOF
 
@@ -153,7 +164,7 @@ EOF
 
 " Vim autoformat
 let g:python3_host_prog="/usr/local/bin/python3"
-" noremap <silent> <leader>cf :Autoformat <CR>
+noremap <silent> <leader>cf :Autoformat <CR>
 " au BufWrite * :Autoformat
 
 " Local-Highlight Configs
@@ -174,33 +185,29 @@ current_line_blame_opts = {
 EOF
 
 lua << EOF
- local alpha = require'alpha'
- local dashboard = require'alpha.themes.dashboard'
- dashboard.section.header.val = {
-	 [[                               __                ]],
-	 [[  ___     ___    ___   __  __ /\_\    ___ ___    ]],
-	 [[ / _ `\  / __`\ / __`\/\ \/\ \\/\ \  / __` __`\  ]],
-	 [[/\ \/\ \/\  __//\ \_\ \ \ \_/ |\ \ \/\ \/\ \/\ \ ]],
-	 [[\ \_\ \_\ \____\ \____/\ \___/  \ \_\ \_\ \_\ \_\]],
-	 [[ \/_/\/_/\/____/\/___/  \/__/    \/_/\/_/\/_/\/_/]],
- }
- dashboard.section.buttons.val = {
+local alpha = require'alpha'
+local dashboard = require'alpha.themes.dashboard'
+dashboard.section.header.val = {
+	[[                               __                ]],
+	[[  ___     ___    ___   __  __ /\_\    ___ ___    ]],
+	[[ / _ `\  / __`\ / __`\/\ \/\ \\/\ \  / __` __`\  ]],
+	[[/\ \/\ \/\  __//\ \_\ \ \ \_/ |\ \ \/\ \/\ \/\ \ ]],
+	[[\ \_\ \_\ \____\ \____/\ \___/  \ \_\ \_\ \_\ \_\]],
+	[[ \/_/\/_/\/____/\/___/  \/__/    \/_/\/_/\/_/\/_/]],
+}
+dashboard.section.buttons.val = {
 	dashboard.button("ff", "  Find File", ",ff"),
 	dashboard.button("fw", "  Find Word", ",fw"),
- }
- local handle = io.popen('fortune')
- local fortune = handle:read("*a")
- handle:close()
- dashboard.section.footer.val = fortune
+}
 
- dashboard.config.opts.noautocmd = true
+dashboard.config.opts.noautocmd = true
 
- vim.cmd[[autocmd User AlphaReady echo 'ready']]
+vim.cmd[[autocmd User AlphaReady echo 'ready']]
 
- alpha.setup(dashboard.config)
+alpha.setup(dashboard.config)
 EOF
 
-" auto-pairs configs
+" Leap Configs
 lua << EOF
-require("nvim-autopairs").setup({})
+require('leap').create_default_mappings()
 EOF
